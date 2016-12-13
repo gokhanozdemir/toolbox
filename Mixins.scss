@@ -1,0 +1,211 @@
+@function to-string($value) {
+  @return inspect($value);
+}
+
+//add responsive Small and Medium Banner Heights
+@mixin bannerHeigtSmallandMedium ($bannerHSmall: 480px, $bannerHMedium:640px, $modifier: 0px) {
+  @media #{$small-only} {
+      height: ($bannerHSmall + $modifier);
+      max-height: ($bannerHSmall + $modifier);
+  }
+
+    @media #{$medium-only} {
+      height: ($bannerHMedium + $modifier);
+      max-height: ($bannerHMedium + $modifier);
+  }
+} //@include bannerHeigtSmallandMedium();
+
+
+@mixin box-shadow($top: 10px, $left:10px, $blur:50px, $color: #ccc, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $color;
+    -moz-box-shadow:inset $top $left $blur $color;
+    box-shadow:inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+
+@mixin drop-shadow($top: 10px, $left:10px, $blur:50px, $color: red) {
+  -webkit-filter: drop-shadow($top $left $blur #222);
+  -moz-filter:    drop-shadow($top $left $blur #222);
+  filter:         drop-shadow($top $left $blur #222);
+}
+
+@mixin rounded($radius: 0.3em) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin grayscale_element($value) {
+    -webkit-filter: #{"grayscale(#{$value})"};
+    -moz-filter: #{"grayscale(#{$value})"};
+    filter:#{"grayscale(#{$value})"};
+}
+
+@mixin invert_element() {
+  -webkit-filter: invert(100%);
+  -moz-filter: invert(100%);
+	filter: invert(100%);
+}
+
+//Mixin for retina images
+@mixin image-2x($image, $width, $height) {
+  @media (min--moz-device-pixel-ratio: 1.3),
+         (-o-min-device-pixel-ratio: 2.6/2),
+         (-webkit-min-device-pixel-ratio: 1.3),
+         (min-device-pixel-ratio: 1.3),
+         (min-resolution: 1.3dppx) {
+    /* on retina, use image that's scaled by 2 */
+    background-image: url($image);
+    background-size: $width $height;
+  }
+}
+/*
+div.logo {
+   background: url("logo.png") no-repeat;
+   @include image-2x("logo2x.png", 100px, 25px);
+ }*/
+
+
+//Set the opacity for all browsers and provide a filter fallback for IE8.
+ @mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+} // @include opacity(0.8);
+
+
+//Pass in the desired location of your target element to produce all the necessary positioning code.
+@mixin abs-pos ($top: auto, $right: auto, $bottom: auto, $left: auto) {
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+  position: absolute;
+} //.abs { @include abs-pos(10px, 10px, 5px, 15px); }
+
+
+//This mixin sets the font size in rem's with a px fallback.
+@mixin font-size($size: 16, $base: 16) {
+    font-size: $size + px;
+    font-size: ($size / $base) * 1rem;
+}//body { @include font-size(16); }
+
+//This mixin sets the line height in rem's with a px fallback
+@mixin line-height($heightValue: 16 ){
+    line-height: $heightValue / 2 + px; //fallback for old browsers
+    line-height: (0.125 * $heightValue / 2) + rem;
+} //body { @include line-height (16);}
+
+
+//Rotation mixin
+@mixin rotate($degrees) {
+  transform-origin: top left;
+  transform-style: preserve-3D;
+  $M11 : 1; $M12 : sin( $degrees ); $M21 : sin( $degrees ); $M22 : 1;
+  @include transform(rotate($degrees));
+   /*-webkit-transform: rotate($degrees);
+   -moz-transform: rotate($degrees);
+   -ms-transform: rotate($degrees);
+   -o-transform: rotate($degrees);
+   transform: rotate($degrees);*/
+   -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=#{$M11}, M12=-#{$M12}, M21=-#{$M21}, M22=#{$M22}, SizingMethod='auto expand')";
+  filter: progid:DXImageTransform.Microsoft.Matrix(M11=#{$M11}, M12=-#{$M12}, M21=-#{$M21}, M22=#{$M22}, SizingMethod='auto expand');
+} // .rotate {  @include rotate(-45deg); }
+
+//vertical gradient to 0 opacity
+@mixin gradient-filter-toZero($color: #2a2a2a) {
+  background: rgba($color, .2);/* Old Browsers */
+  background: -moz-linear-gradient(top, rgba($color,1) 0%, rgba($color,0) 100%); /* FF3.6+ */
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba($color,1)), color-stop(100%, rgba($color,0)));/* Chrome, Safari4+ */
+  background: -webkit-linear-gradient(top, rgba($color,1) 0%, rgba($color,0) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba($color,1) 0%, rgba($color,0) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba($color,1) 0%, rgba($color,0) 100%); /* IE 10+ */
+  background: linear-gradient(to bottom, rgba($color,1) 0%, rgba($color,0) 100%);/* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$color', endColorstr='$color', GradientType=0 );/* IE6-9 */
+} // @include gradient-filter-toZero(#666666)
+
+// generic transform
+@mixin transform($transforms) {
+  transform-style: preserve-3D;
+	   -moz-transform: $transforms;
+	     -o-transform: $transforms;
+	    -ms-transform: $transforms;
+	-webkit-transform: $transforms;
+          transform: $transforms;
+} // @include transform(scaleX(-1));
+
+//transition properties
+@mixin transition ($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+} // @include transition(color .3s ease, font-size .5s ease);
+//@include transition(all 200ms ease-in-out);
+
+//transition properties
+@mixin transition-timing-function ($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+} // @include transition-timing-function(cubic-bezier(0.7,0,0.3,1));
+
+@mixin vertical-align($position: relative) {
+  position: $position;
+  top: 50%;
+  @include transform(translateY(-50%));
+  /*-webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);*/
+} //@include vertical-align();
+
+@mixin vertical-align-flex(){
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+// rotate
+//@mixin rotate ($deg) {
+//  @include transform(rotate(#{$deg}deg));
+//}
+
+// scale
+@mixin scale($scale) {
+	 @include transform(scale($scale));
+}
+// translate
+@mixin translate ($x, $y) {
+   @include transform(translate($x, $y));
+}
+// skew
+@mixin skew ($x, $y) {
+   @include transform(skew(#{$x}deg, #{$y}deg));
+}
+//transform origin
+@mixin transform-origin ($origin) {
+      moz-transform-origin: $origin;
+	     -o-transform-origin: $origin;
+	    -ms-transform-origin: $origin;
+	-webkit-transform-origin: $origin;
+          transform-origin: $origin;
+}
+
+@mixin pixelated {
+  image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+  image-rendering: -moz-crisp-edges;          /* Firefox                        */
+  image-rendering: -o-crisp-edges;            /* Opera                          */
+  image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+  image-rendering: pixelated; /* Chrome */
+  image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+  -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
