@@ -104,7 +104,7 @@ div.logo {
 
 //Rotation mixin
 @mixin rotate($degrees) {
-  transform-origin: top left;
+  transform-origin: center center;
   transform-style: preserve-3D;
   $M11 : 1; $M12 : sin( $degrees ); $M21 : sin( $degrees ); $M22 : 1;
   @include transform(rotate($degrees));
@@ -169,6 +169,17 @@ div.logo {
   transform: translateY(-50%);*/
 } //@include vertical-align();
 
+@mixin horizontal-align($position: relative) {
+  position: $position;
+  left: 50%;
+  @include transform(translateX(-50%));
+  /*-webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);*/
+} //@include horizontal-align();
+
 @mixin vertical-align-flex(){
   display: flex;
   justify-content: center;
@@ -209,3 +220,7 @@ div.logo {
   image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
   -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
+
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+} //  color: tint(#BADA55, 42%);
